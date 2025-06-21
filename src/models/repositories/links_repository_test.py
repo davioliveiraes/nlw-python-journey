@@ -7,7 +7,7 @@ db_connection_handler.connect()
 link_id = str(uuid.uuid4())
 trip_id = str(uuid.uuid4())
 
-@pytest.mark.skip(reason="interacao com o banco de dados")
+@pytest.mark.skip(reason="Integração com o banco de dados")
 def test_registry_link():
     conn = db_connection_handler.get_connection()
     links_repository = LinksRepository(conn) 
@@ -15,14 +15,13 @@ def test_registry_link():
     link_infos = {
         "id": link_id,
         "trip_id": trip_id,
-        "email": "wwwolamundo@gmail.com",
-        "title": "hotel"
+        "link": "www.hotelOliveira.com",
+        "title": "Hotel Oliveira"
     }
 
     links_repository.registry_link(link_infos)
 
-
-@pytest.mark.skip(reason="interacao com o banco de dados")
+@pytest.mark.skip(reason="Integração com o banco de dados")
 def test_find_links_from_trip():
     conn = db_connection_handler.get_connection()
     links_repository = LinksRepository(conn)
