@@ -84,9 +84,10 @@ pip install -r requirements.txt
 ```bash
 # Execute o Python para criar as tabelas
 python
->>> from app import app, db
+>>> from src.main.server.server import app
+>>> from src.models.settings.db_connection_handler import db_connection_handler
 >>> with app.app_context():
-...     db.create_all()
+...     db_connection_handler.get_engine().create_all()
 >>> exit()
 ```
 
