@@ -81,14 +81,82 @@ pip install -r requirements.txt
 ```
 
 ### 4. Configure o banco de dados
+
+<h4>Via DBeaver</h4>
+
+1. Conectar ao Banco SQLite do Projeto
+    -  Abrir o DBeaver
+
+2. Abra o DBeaver no seu sistema
+
+   -  Criar Nova Conexão
+
+   -  Clique em "Nova Conexão" ou vá em Database > New Database Connection
+    Selecione "SQLite" na lista de bancos de dados
+    Clique em "Next"
+
+3. Configurar a Conexão
+
+    - Path do banco: Navegue até a pasta do seu projeto e selecione o   arquivo storage.db
+/home/seu-usuario/Documentos/Practice/Python/NLWJourney/storage.db
+
+    - Clique em "Test Connection" para verificar
+    - Clique em "Finish"
+
+4. Executar o Script SQL
+   - Abrir Editor SQL
+
+   - Clique com botão direito na sua conexão
+     Selecione "SQL Editor" → "Open SQL script"
+     Ou pressione Ctrl+]
+
+5. Colar e Executar o Script
+
+   - Cole este código no editor SQL:
+
 ```bash
-# Execute o Python para criar as tabelas
-python
->>> from src.main.server.server import app
->>> from src.models.settings.db_connection_handler import db_connection_handler
->>> with app.app_context():
-...     db_connection_handler.get_engine().create_all()
->>> exit()
+CREATE TABLE IF NOT EXISTS 'trips' (
+   id TEXT PRIMARY KEY,
+   destination TEXT NOT NULL,
+   start_date DATETIME,
+   end_date DATETIME,
+   owner_name TEXT NOT NULL,
+   owner_email TEXT NOT NULL,
+   status INTEGER -- 1 para verdadeiro (true), 0 para falso (false)
+);
+
+CREATE TABLE IF NOT EXISTS 'emails_to_invite' (
+   id TEXT PRIMARY KEY,
+   trip_id TEXT,
+   email TEXT NOT NULL,
+   FOREIGN KEY (trip_id) REFERENCES trips(id)
+);
+
+CREATE TABLE IF NOT EXISTS 'links' (
+   id TEXT PRIMARY KEY,
+   trip_id TEXT,
+   link TEXT NOT NULL,
+   title TEXT NOT NULL,
+   FOREIGN KEY (trip_id) REFERENCES trips(id)
+);
+
+CREATE TABLE IF NOT EXISTS 'participants' (
+	id TEXT PRIMARY KEY,
+	trip_id TEXT NOT NULL,
+	emails_to_invite_id TEXT NOT NULL,
+	name TEXT NOT NULL,
+	is_confirmed INTEGER, --1 para verdadeira (true), 0 para falso
+	FOREIGN KEY (trip_id) REFERENCES trips(id),
+	FOREIGN KEY (emails_to_invite_id) REFERENCES emails_to_invite(id)
+);
+
+CREATE TABLE IF NOT EXISTS 'activities' (
+	id TEXT PRIMARY KEY,
+	trip_id TEXT NOT NULL,
+	title TEXT NOT NULL,
+	occurs_at DATETIME,
+	FOREIGN KEY (trip_id) REFERENCES trips(id)
+);
 ```
 
 ### 5. Execute a aplicação
